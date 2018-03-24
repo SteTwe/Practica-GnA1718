@@ -14,7 +14,19 @@ public class InsertionSort extends SortingAlgorithm {
 		if (array == null) {
 			throw new IllegalArgumentException("argument 'array' must not be null.");
 		}
-		throw new RuntimeException("not implemented"); // TODO
+		long counter = 0;
+		for (int i = 1; i < array.length; i++){
+            for (int j = i; j > 0;){
+            	counter++;
+                if (less(array[j], array[j-1])){
+                    swap(array, j, j-1);
+                    j--;                    
+                }
+                else j++;
+                if (j >= array.length) break;
+            }
+        }
+		return counter;
 	}
 
 	/**
