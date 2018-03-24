@@ -1,0 +1,42 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[latin1]{inputenc}
+\usepackage[dutch]{babel}
+\usepackage{csquotes}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[backend=biber, style=numeric, citestyle=numeric-comp, sorting = none]{biblatex}
+\author{Stef Tweepenninckx, r0677232}
+\title{Practicum 1: Sorteeralgoritmes}
+
+
+%define printtitle
+\makeatletter
+\def\printtitle{                 
+    {\large \@title}} 
+\makeatother
+
+%define printauthor
+\makeatletter                       
+\def\printauthor{                  
+    {\large \@author}}              
+\makeatother
+
+\begin{document}
+\begin{titlepage}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} 
+\center 
+\textsc{\LARGE Gegevensstructuren en algoritmen}\\[1.5cm] 
+\HRule \\[0.4cm]
+
+{\huge \bfseries \printtitle}\\[0.4cm] 
+\HRule \\[0.4cm]
+
+\Large \emph{Authors:}\\
+ \textsc{\printauthor}\\[3cm]
+
+{\large \textsc{\today}}\\[3cm] 
+
+\vfill 
+\end{titlepage}
+\end{document}
