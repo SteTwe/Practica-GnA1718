@@ -3,9 +3,9 @@ package gna;
 
 /**
  * Performs sort by using the Quick Sort algorithm.
- *TODO mogelijk verwijderen abstract, zie na tests
+ *
  */
-public abstract class QuickSort extends SortingAlgorithm{
+public class QuickSort extends SortingAlgorithm{
 	/**
 	 * Sorts the given array using quick sort.
 	 * 
@@ -25,19 +25,19 @@ public abstract class QuickSort extends SortingAlgorithm{
 	static long counter = 0;
 	
 	private static int partition(Comparable[] array, int low, int high){
-		int i = low + 1;
-		int j = high;
-		Comparable pivot = array[low];
-		while (true){
-			while (less(array[i++], pivot)){
-				counter++;
-				if (i == high) break;
-			}
-			
-			while (less(array[j--], pivot)){
-				counter++;
-				if (j == low) break;
-			}
+		int i = low;
+        int j = high +1;
+        Comparable pivot = array[low];
+        while (true){
+            while (less(array[++i], pivot)){
+                counter++;
+                if (i == high) break;
+            }
+
+            while (less(pivot, array[--j])){
+                counter++;
+                if (j == low) break;
+            }
 			if (i>=j) break;
 			swap(array, i, j);
 		}
@@ -49,5 +49,11 @@ public abstract class QuickSort extends SortingAlgorithm{
 	 * Constructor.
 	 */
 	public QuickSort() {
+	}
+
+	@Override
+	public long sort(Comparable[] array) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
