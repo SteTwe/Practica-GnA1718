@@ -1,5 +1,7 @@
 package gna;
 
+import java.util.Random;
+
 // Do not remove the "implements libpract.SortingAlgorithm".
 public abstract class SortingAlgorithm implements libpract.SortingAlgorithm{
 	/**
@@ -36,4 +38,14 @@ public abstract class SortingAlgorithm implements libpract.SortingAlgorithm{
         }
         return true;
     }
+	
+	protected Comparable[] randomArray(int lengte, int bovengrens){
+		Random randNumGenerator = new Random();
+        Comparable[] x = new Comparable[lengte];
+        for (int i=0; i<x.length; i++)
+        {
+            x[i] = (randNumGenerator.nextInt(bovengrens)+1);
+        }
+        return x;
+	}
 }

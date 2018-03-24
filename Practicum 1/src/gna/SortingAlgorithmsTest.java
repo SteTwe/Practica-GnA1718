@@ -13,7 +13,17 @@ import org.junit.Test;
  */
 public class SortingAlgorithmsTest {
 
-	private Comparable[] testingArray = {6, 5, 2, 3, 4, 4, 5, 12, 15, 12, 7,  8, 2 ,3 ,9 };
+	private Comparable[] randomArray(int lengte, int bovengrens){
+		Random randNumGenerator = new Random();
+        Comparable[] x = new Comparable[lengte];
+        for (int i=0; i<x.length; i++)
+        {
+            x[i] = (randNumGenerator.nextInt(bovengrens)+1);
+        }
+        return x;
+	}
+	
+	private Comparable[] testingArray = randomArray(25, 10);
 	
 	@Test
 	public void selectionSortSorted() {
