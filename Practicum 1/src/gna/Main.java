@@ -22,10 +22,11 @@ public class Main {
 	 * You can replace this.
 	 */
 	public static void main(String[] args) {
-		Comparable[] array = randomArray(65,10);
-		System.out.println(array.length);
-		InsertionSort insertionSort = new InsertionSort();
-		System.out.println(insertionSort.sort(array) + " Insertion sort");
+		Comparable[] array = randomArray(100,100);
+		System.out.println("Length = " + array.length);
+		System.out.println(java.util.Arrays.toString(array));
+		QuickSort quickSort = new QuickSort();
+		System.out.println(quickSort.sort(array, 0, array.length-1) + " Quicksort");
 
 	}
 }
