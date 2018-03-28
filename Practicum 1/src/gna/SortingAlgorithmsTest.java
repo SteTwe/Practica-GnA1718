@@ -39,9 +39,7 @@ public class SortingAlgorithmsTest {
 		//Check if they are the same
 		assertArrayEquals(arrayJava, arrayOwn);		
 	}
-	
-	
-	
+
 	@Test
 	public void insertionSortSorted() {
 		InsertionSort sort = new InsertionSort();
@@ -71,20 +69,4 @@ public class SortingAlgorithmsTest {
 		//Check if they are the same
 		assertArrayEquals(arrayJava, arrayOwn);		
 	}
-	
-	public static void main(){
-		int amount = 20;
-		int bovengrens= 50;
-		Comparable[] array = new Comparable[amount];
-		Random random = new Random();
-		for (int i=0; i<amount; i++){
-			Comparable element = random.nextInt(bovengrens);
-			array[i] = element;
-		}
-		System.out.println(java.util.Arrays.toString(array));
-	}
-
-
-	
-
 }
