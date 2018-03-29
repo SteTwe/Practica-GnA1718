@@ -33,12 +33,13 @@ public class QuickSort extends SortingAlgorithm{
                 counter++;
                 if (i == high) break;
             }
-
+            counter++;
             while (less(pivot, array[--j])){
                 counter++;
                 if (j == low) break;
             }
-			if (i>=j) break;
+            counter++;
+			if (i >= j) break;
 			swap(array, i, j);
 		}
 		swap(array, j, low);

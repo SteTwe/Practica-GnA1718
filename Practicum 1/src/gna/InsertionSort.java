@@ -16,16 +16,11 @@ public class InsertionSort extends SortingAlgorithm {
 		}
 		long counter = 0;
 		for (int i = 1; i < array.length; i++){
-            for (int j = i; j > 0;){
-            	counter++;
-                if (less(array[j], array[j-1])){
-                    swap(array, j, j-1);
-                    j--;                    
-                }
-                else j++;
-                if (j >= array.length) break;
+			for (int j = i; j > 0 && less(array[j], array[j-1]); j--){
+                swap(array, j, j-1);
+				counter++;
+			}
             }
-        }
 		return counter;
 	}
 
