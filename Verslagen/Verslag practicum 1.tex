@@ -231,24 +231,7 @@ Zoals we duidelijk kunnen zien is quicksort het meest effici\"ente algoritme voo
 \newpage
 \section*{Doubling ratio}
 \subsection*{Insertion sort}
-\begin{table}[H]
-\centering
-\label{my-label}
-\begin{tabular}{|llll|}
-\hline
-\multicolumn{1}{|l|}{\textbf{N}} & \multicolumn{1}{l|}{\textbf{Tijd (milliseconden)}} & \multicolumn{1}{l|}{\textbf{ratio}} & \textbf{lg ratio} \\ \hline
-1000                             & 15                                                 & -                                   & -                 \\
-2000                             & 28                                                 & 1.9                                 & 0.93              \\
-4000                             & 41                                                 & 1.5                                 & 0.58              \\
-8000                             & 96                                                 & 2.3                                 & 1.20              \\
-16000                            & 355                                                & 3.7                                 & 1.89              \\
-32000                            & 1049                                               & 3                                   & 1.58              \\
-64000                            & 4861                                               & 4.6                                 & 2.20              \\
-128000                           & 19269                                              & 4                                   & 2                 \\ \hline
-\end{tabular}
-\caption{Doubling ratio insertion sort}
-\end{table}
-
+We voeren het doubling ratio experiment uit en plotten de resultaten:\\
 \begin{tikzpicture}
 \begin{axis}[
     title={Doubling ratio insertion sort},
@@ -256,7 +239,7 @@ Zoals we duidelijk kunnen zien is quicksort het meest effici\"ente algoritme voo
     ylabel={Uitvoeringstijd (milliseconden)},
     xmin=0, xmax=128000,
     ymin=0, ymax=20000,
-    xtick={0,10000,20000,30000,40000,50000,60000,70000,80000,90000,100000,110000,120000,128000},
+    xtick={0,25000,50000,75000,100000,125000},
     ytick={0,2500,5000,7500,10000,12500,15000,17500,20000},
     legend pos=north west,
     ymajorgrids=true,
@@ -272,35 +255,69 @@ Zoals we duidelijk kunnen zien is quicksort het meest effici\"ente algoritme voo
     \legend{Experiment};
 
 \end{axis}
+\end{tikzpicture}\\
+\pgfplotstableread{
+1000 15
+2000 28
+4000 41
+8000 96
+16000 355
+32000 1049
+64000 4861
+128000 19269
+}\datatable
+\begin{tikzpicture}
+    \begin{loglogaxis}[
+    title ={Doubling ratio insertion sort lg-lg plot},
+    ylabel = {lg(T(N))},
+    xlabel = {lg(N)},
+    legend pos = north west,
+    log base y = 2,
+    log base x = 2,
+     xmin=1000, xmax=128000,
+     ymin=10, ymax=20000,
+     width=.7\columnwidth,
+     /pgfplots/log ticks with fixed point,
+%     /pgfplots/ytick={250,300,400,...,700}]
+     ]
+     \addplot table{\datatable};
+     \addplot [black]
+        table [y={create col/linear regression={y=1}}] {\datatable} % calculate and plot the regression line
+     ;
+     \addlegendentry{Experiment}
+\addlegendentry{Slope = 
+$\pgfmathprintnumber{\pgfplotstableregressiona}$}
+     \end{loglogaxis}
 \end{tikzpicture}
+\newpage
+We krijgen een rechte met een slope van 1.49, $T(N) = aN^b$ en b = 1.49. Om de voorspelling te kunnen maken voor de uitvoeringstijd met N = 1024000, moeten we dus eerst a berekenen. Dit doen we door de vergelijking $1049 = a \times 32000^{1.49}$ op te lossen en dit geeft ons $a= 0.203 \times 10^{-3}$.\\
+Nu kunnen we een voorspelling maken voor N = 1024000, immers $T(N) = 0.203 \times 10^{-3}N^{1.49}$. Als we N = 1024000 invullen, krijgen we T(1024000)= 183165 milliseconden.
 
-
-
-
-\subsection*{Quicksort}
 \begin{table}[H]
 \centering
-\label{my-label}
 \begin{tabular}{|llll|}
 \hline
 \multicolumn{1}{|l|}{\textbf{N}} & \multicolumn{1}{l|}{\textbf{Tijd (milliseconden)}} & \multicolumn{1}{l|}{\textbf{ratio}} & \textbf{lg ratio} \\ \hline
-1000                             & 1                                                  & -                                   & -                 \\
-2000                             & 2                                                  & 2                                   & 1                 \\
-4000                             & 3                                                  & 1.5                                 & 0.58              \\
-8000                             & 5                                                  & 1.7                                 & 0.77              \\
-16000                            & 9                                                  & 1.8                                 & 0.85              \\
-32000                            & 15                                                 & 1.7                                 & 0.77              \\
-64000                            & 29                                                 & 1.9                                 & 0.93              \\
-128000                           & 40                                                 & 1.4                                 & 0.49              \\ \hline
+1000                             & 15                                                 & -                                   & -                 \\
+2000                             & 28                                                 & 1.9                                 & 0.93              \\
+4000                             & 41                                                 & 1.5                                 & 0.58              \\
+8000                             & 96                                                 & 2.3                                 & 1.20              \\
+16000                            & 355                                                & 3.7                                 & 1.89              \\
+32000                            & 1049                                               & 3                                   & 1.58              \\
+64000                            & 4861                                               & 4.6                                 & 2.20              \\
+128000                           & 19269                                              & 4                                   & 2                 \\ \hline
 \end{tabular}
-\caption{Doubling ratio quicksort}
+\caption{Doubling ratio insertion sort}
 \end{table}
 
+\newpage
+\subsection*{Quicksort}
+We voeren het doubling ratio experiment uit en plotten de resultaten:\\
 \begin{tikzpicture}
 \begin{axis}[
-    title={Quicksort},
-    xlabel={Grootte van array N},
-    ylabel={Aantal vergelijkingen},
+    title={Doubling ratio quicksort},
+    xlabel={Aantal elementen N},
+    ylabel={Uitvoeringstijd (milliseconden)},
     xmin=0, xmax=128000,
     ymin=0, ymax=40,
     xtick={0,10000,20000,30000,40000,50000,60000,70000,80000,90000,100000,110000,120000,128000},
@@ -330,48 +347,83 @@ Zoals we duidelijk kunnen zien is quicksort het meest effici\"ente algoritme voo
 \end{tikzpicture}
 
 \pgfplotstableread{
-9.966 0
-10.966 1
-11.966 1.585
-12.966 2.322
-13.966 3.170
-14.966 3.907
-15.966 4.858
-16.966 5.322
-
+1000 1
+2000 2
+4000 3
+8000 5
+16000 9
+32000 15
+64000 29
+128000 40
 }\datatable
-
-
-\pgfplotstableread{
-X Y
-1000 2
-2000 4
-4000 6
-8000 12
-16000 14
-32000 30
-64000 54
-128000 63
-}\datatable
-
 \begin{tikzpicture}
-\begin{axis}[legend pos=outer north east]
-\addplot [only marks, mark = *] table {\datatable};
-\addplot [thick, red] table[
-    y={create col/linear regression={y=Y}}
-] % compute a linear regression from the input table
-{\datatable};
-
-\addplot [
-    domain= 0:100, 
-    samples=100, 
-    color=blue,
-    ]
-    {1.39*x*(log2(x))};
-\addlegendentry{$y(x)$}
-\addlegendentry{%
-$\pgfmathprintnumber{\pgfplotstableregressiona} \cdot x
-\pgfmathprintnumber[print sign]{\pgfplotstableregressionb}$}
-\end{axis}
+    \begin{loglogaxis}[
+    title ={Doubling ratio quicksort lg-lg plot},
+    ylabel = {lg(T(N))},
+    xlabel = {lg(N)},
+    legend pos = north west,
+    log base y = 2,
+    log base x = 2,
+     xmin=1000, xmax=128000,
+     ymin=1, ymax=40,
+     width=.8\columnwidth,
+     /pgfplots/log ticks with fixed point,
+%     /pgfplots/ytick={250,300,400,...,700}]
+     ]
+     \addplot table{\datatable};
+     \addplot [black]
+        table [y={create col/linear regression={y=1}}] {\datatable} % calculate and plot the regression line
+     ;
+     \addlegendentry{$y(x)$}
+\addlegendentry{Slope = 
+$\pgfmathprintnumber{\pgfplotstableregressiona}$}
+     \end{loglogaxis}
 \end{tikzpicture}
+\newpage
+We krijgen een rechte met een slope van 0.77, $T(N) = aN^b$ en b = 0.77. Om de voorspelling te kunnen maken voor de uitvoeringstijd met N = 1024000, moeten we dus eerst a berekenen. Dit doen we door de vergelijking $15 = a \times 32000^{0.77}$ op te lossen en dit geeft ons $a= 0.509 \times 10^{-2}$.\\
+Nu kunnen we een voorspelling maken voor N = 1024000, immers $T(N) = 0.509 \times 10^{-2}N^{0.77}$. Als we N = 1024000 invullen, krijgen we T(1024000)= 216 milliseconden.
+\begin{table}[H]
+\centering
+\begin{tabular}{|llll|}
+\hline
+\multicolumn{1}{|l|}{\textbf{N}} & \multicolumn{1}{l|}{\textbf{Tijd (milliseconden)}} & \multicolumn{1}{l|}{\textbf{ratio}} & \textbf{lg ratio} \\ \hline
+1000                             & 1                                                  & -                                   & -                 \\
+2000                             & 2                                                  & 2                                   & 1                 \\
+4000                             & 3                                                  & 1.5                                 & 0.58              \\
+8000                             & 5                                                  & 1.7                                 & 0.77              \\
+16000                            & 9                                                  & 1.8                                 & 0.85              \\
+32000                            & 15                                                 & 1.7                                 & 0.77              \\
+64000                            & 29                                                 & 1.9                                 & 0.93              \\
+128000                           & 40                                                 & 1.4                                 & 0.49              \\ \hline
+\end{tabular}
+\caption{Doubling ratio quicksort}
+\end{table}
+
+\section{roemel}
+\begin{tikzpicture}
+    \begin{loglogaxis}[
+    title ={Doubling ratio insertion lg-lg plot},
+    ylabel = {lg(T(N))},
+    xlabel = {lg(N)},
+    legend pos = north west,
+    log base y = 2,
+    log base x = 2,
+     xmin=1, xmax=64,
+     ymin=1, ymax=64,
+     width=.8\columnwidth,
+     /pgfplots/log ticks with fixed point,
+%     /pgfplots/ytick={250,300,400,...,700}]
+     ]
+     \addplot [
+     color=red,
+     domain=1:60,
+     ]
+     {(x^2)/4};
+
+     \addlegendentry{$y(x)$}
+\addlegendentry{Slope = 
+$\pgfmathprintnumber{\pgfplotstableregressiona}$}
+     \end{loglogaxis}
+\end{tikzpicture}
+
 \end{document}
