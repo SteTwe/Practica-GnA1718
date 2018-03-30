@@ -7,6 +7,7 @@
 \usepackage[dutch]{babel}
 \usepackage{csquotes}
 \usepackage{amsmath}
+\usepackage[toc,page]{appendix}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage[backend=biber, style=numeric, citestyle=numeric-comp, sorting = none]{biblatex}
@@ -54,7 +55,7 @@
 \paragraph{Werking selection sort} Selection sort is een van de meest eenvoudige sorteeralgoritmen. We doorlopen de array op zoek naar het kleinste element, waarna we dit element verwisselen met het eerste element van de array. Herhaal deze stappen tot we op het einde van de array zitten en de array gesorteerd is.
 \paragraph{Verwachtingen} Bij selection sort verwachten we dat het aantal vergelijkingen, voor een array van N elementen, groeit volgens $\sim \frac{N^2}{2}$.
 \paragraph{Experiment}\hspace{0pt}\\
-De geplotte data (zie appendix) van de uitvoering van selection sort voor arrays met verschillend aantal elementen N:\\
+We voeren selection sort uit op random gegenereerde arrays. De geplotte data (zie Tabel 3 in bijlagen) van de uitvoering van selection sort voor arrays met verschillend aantal elementen N:\\
 \begin{tikzpicture}
 \begin{axis}[
     title={Selection sort},
@@ -93,7 +94,7 @@ De geplotte data (zie appendix) van de uitvoering van selection sort voor arrays
 \paragraph{Werking insertion sort} Insertion sort is net als selection sort een eenvoudig sorteeralgoritme. We doorlopen de array van links naar rechts. Als het huidige element kleiner is dan een van de voorgaand elementen, verschuiven we het huidige element naar voor tot er geen kleiner element voor het huidige staat.
 \paragraph{Verwachtingen} Bij insertion sort verwachten we dat het aantal vergelijkingen, voor een array van N elementen, groeit volgens $\sim \frac{N^2}{4}$. In het worst-case geval (een array die gesorteerd is van groot naar klein) groeit het aantal vergelijkingen volgens $\sim \frac{N^2}{2}$ 
 \paragraph{Experiment}\hspace{0pt}\\
-De geplotte data (zie appendix) van de uitvoering van insertion sort voor arrays met verschillend aantal elementen N:\\
+We voeren insertion sort uit op random gegenereerde arrays. De geplotte data (zie Tabel 4 in bijlagen) van de uitvoering van insertion sort voor arrays met verschillend aantal elementen N:\\
 \begin{tikzpicture}
 \begin{axis}[
     title={Insertion sort},
@@ -132,7 +133,7 @@ De geplotte data (zie appendix) van de uitvoering van insertion sort voor arrays
 \paragraph{Werking quicksort} Quicksort is een recursief sorteeralgoritme en daardoor iets minder eenvoudig dan voorgaande. We kiezen een pivot, meestal het 1e element, en vergelijken alle andere elementen uit de array hiermee. Zo delen we de array op in 3 delen: de pivot, elementen kleiner dan de pivot, en elementen groter dan de pivot. Dit herhalen we dan op de 2 deelarrays, enz.
 \paragraph{Verwachtingen} Bij quicksort verwachten we dat het aantal vergelijkingen, voor een array van N elementen, groeit volgens $\sim 1.39nlg(n)$. 
 \paragraph{Experiment}\hspace{0pt}\\
-De geplotte data (zie appendix) van de uitvoering van quicksort voor arrays met verschillend aantal elementen N:\\
+We voeren quicksort uit op random gegenereerde arrays. De geplotte data (zie Tabel 5 in bijlagen) van de uitvoering van quicksort voor arrays met verschillend aantal elementen N:\\
 %TODO eventueel extra quicksort
 \begin{tikzpicture}
 \begin{axis}[
@@ -277,6 +278,8 @@ We voeren het doubling ratio experiment uit en plotten de resultaten:\\
      xmin=1000, xmax=128000,
      ymin=10, ymax=20000,
      width=.7\columnwidth,
+     ymajorgrids=true,
+    grid style=dashed,
      /pgfplots/log ticks with fixed point,
 %     /pgfplots/ytick={250,300,400,...,700}]
      ]
@@ -333,16 +336,7 @@ We voeren het doubling ratio experiment uit en plotten de resultaten:\\
     ]
     coordinates {(0,0)(1000,1)(2000,2)(4000,3)(8000,5)(16000,9)(32000,15)(64000,29)(128000,40)
     };
-    \legend{Experiment};
-
-\addplot [
-    domain= 0:100, 
-    samples=100, 
-    color=red,
-    ]
-    {1.39*x*(log2(x))};
-    \addlegendentry{test};
-	
+    \legend{Experiment};	
 \end{axis}
 \end{tikzpicture}
 
@@ -367,6 +361,8 @@ We voeren het doubling ratio experiment uit en plotten de resultaten:\\
      xmin=1000, xmax=128000,
      ymin=1, ymax=40,
      width=.8\columnwidth,
+     ymajorgrids=true,
+    grid style=dashed,
      /pgfplots/log ticks with fixed point,
 %     /pgfplots/ytick={250,300,400,...,700}]
      ]
@@ -399,18 +395,58 @@ Nu kunnen we een voorspelling maken voor N = 1024000, immers $T(N) = 0.509 \time
 \caption{Doubling ratio quicksort}
 \end{table}
 
-\section{roemel}
+\newpage
+\subsection*{Algemene conclusie 2}
+\begin{tikzpicture}
+\begin{axis}[
+    title={Vergelijking doubling ratio},
+    xlabel={Aantal elementen N},
+    ylabel={Uitvoeringstijd (milliseconden)},
+    xmin=0, xmax=128000,
+    ymin=0, ymax=20000,
+    xtick={0,25000,50000,75000,100000,125000},
+    ytick={0,2500,5000,7500,10000,12500,15000,17500,20000},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+]
+ 
+	\addplot[
+    color=blue,
+    mark=+,
+    ]
+    coordinates {(0,0)(1000,15)(2000,28)(4000,41)(8000,96)(16000,355)(32000,1049)(64000,4861)(128000,19269)
+    };
+    \addlegendentry{Insertion sort};
+    
+    \addplot[
+    color=red,
+    mark=+,
+    ]
+    coordinates {(0,0)(1000,1)(2000,2)(4000,3)(8000,5)(16000,9)(32000,15)(64000,29)(128000,40)
+    };
+    \addlegendentry{Quicksort};
+
+\end{axis}
+\end{tikzpicture}\\
+Opnieuw is duidelijk zichtbaar dat quicksort veel sneller werkt voor arrays met zeer veel elementen. 
+
+
+\section*{Doubling ratio $\sim n^5$}
 \begin{tikzpicture}
     \begin{loglogaxis}[
-    title ={Doubling ratio insertion lg-lg plot},
+    title ={Doubling ratio $\sim n^5$},
     ylabel = {lg(T(N))},
     xlabel = {lg(N)},
     legend pos = north west,
     log base y = 2,
     log base x = 2,
-     xmin=1, xmax=64,
+     xmin=1, xmax=16,
      ymin=1, ymax=64,
      width=.8\columnwidth,
+    ymajorgrids=true,
+    grid style=dashed,
+     xmajorgrids=true,
      /pgfplots/log ticks with fixed point,
 %     /pgfplots/ytick={250,300,400,...,700}]
      ]
@@ -418,12 +454,80 @@ Nu kunnen we een voorspelling maken voor N = 1024000, immers $T(N) = 0.509 \time
      color=red,
      domain=1:60,
      ]
-     {(x^2)/4};
+     {(x^5)};
 
-     \addlegendentry{$y(x)$}
-\addlegendentry{Slope = 
-$\pgfmathprintnumber{\pgfplotstableregressiona}$}
+     \addlegendentry{$\sim n^5$}
      \end{loglogaxis}
-\end{tikzpicture}
+\end{tikzpicture}\\
+Om de doubling ratio van $\sim n^5$ te weten te komen, plotten we $\sim n^5$ op een lg-lg grafiek. Met graphing software heb ik de slope van de rechte berekend, b is ongeveer 10. We weten dat de doubling ratio gelijk is aan $2^b$ en dus 1024.
+
+\section*{Algemene conclusie}
+Uit de experimenten blijkt dat naarmate het aantal elementen stijgt, selection- en insertion sort aanzienlijk meer werk/tijd in beslag neemt. Voor kleine aantallen blijven ze wel zeer geschikt.
+
+
+\newpage
+\section*{Bijlagen}
+\begin{table}[H]
+\centering
+\begin{tabular}{|ll|ll|ll|}
+\hline
+\multicolumn{1}{|l|}{\textbf{N}} & \textbf{Aantal vergelijkingen} & \multicolumn{1}{l|}{\textbf{N}} & \textbf{Aantal vergelijkingen} & \multicolumn{1}{l|}{\textbf{N}} & \textbf{Aantal vergelijkingen} \\ \hline
+2                                & 1                              & 20                              & 190                            & 50                              & 1225                           \\
+3                                & 3                              & 22                              & 231                            & 55                              & 1485                           \\
+4                                & 6                              & 24                              & 276                            & 60                              & 1770                           \\
+6                                & 15                             & 26                              & 325                            & 65                              & 2080                           \\
+8                                & 28                             & 28                              & 378                            & 70                              & 2415                           \\
+10                               & 45                             & 30                              & 435                            & 75                              & 2775                           \\
+12                               & 66                             & 34                              & 561                            & 80                              & 3160                           \\
+14                               & 91                             & 38                              & 703                            & 85                              & 3570                           \\
+16                               & 120                            & 42                              & 861                            & 90                              & 4005                           \\
+18                               & 153                            & 46                              & 1035                           & 95                              & 4465                           \\
+                                 &                                &                                 &                                & 100                             & 4950                           \\ \hline
+\end{tabular}
+\caption{Data selection sort}
+\label{selection}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|ll|ll|ll|}
+\hline
+\multicolumn{1}{|l|}{\textbf{N}} & \textbf{Aantal vergelijkingen} & \multicolumn{1}{l|}{\textbf{N}} & \textbf{Aantal vergelijkingen} & \multicolumn{1}{l|}{\textbf{N}} & \textbf{Aantal vergelijkingen} \\ \hline
+2                                & 1                              & 20                              & 105                            & 50                              & 607                            \\
+3                                & 1                              & 22                              & 133                            & 55                              & 732                            \\
+4                                & 3                              & 24                              & 136                            & 60                              & 862                            \\
+6                                & 8                              & 26                              & 148                            & 65                              & 983                            \\
+8                                & 20                             & 28                              & 169                            & 70                              & 1063                           \\
+10                               & 24                             & 30                              & 202                            & 75                              & 1246                           \\
+12                               & 34                             & 34                              & 302                            & 80                              & 1543                           \\
+14                               & 50                             & 38                              & 330                            & 85                              & 1684                           \\
+16                               & 73                             & 42                              & 436                            & 90                              & 2134                           \\
+18                               & 81                             & 46                              & 500                            & 95                              & 2287                           \\
+                                 &                                &                                 &                                & 100                             & 2509                           \\ \hline
+\end{tabular}
+\caption{Data insertion sort}
+\label{insertion}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|ll|ll|ll|}
+\hline
+\multicolumn{1}{|l|}{\textbf{N}} & \textbf{Aantal vergelijkingen} & \multicolumn{1}{l|}{\textbf{N}} & \textbf{Aantal vergelijkingen} & \multicolumn{1}{l|}{\textbf{N}} & \textbf{Aantal vergelijkingen} \\ \hline
+2                                & 3                              & 20                              & 108                            & 50                              & 368                            \\
+3                                & 7                              & 22                              & 125                            & 55                              & 403                            \\
+4                                & 8                              & 24                              & 167                            & 60                              & 438                            \\
+6                                & 21                             & 26                              & 157                            & 65                              & 497                            \\
+8                                & 31                             & 28                              & 174                            & 70                              & 560                            \\
+10                               & 39                             & 30                              & 183                            & 75                              & 622                            \\
+12                               & 48                             & 34                              & 206                            & 80                              & 690                            \\
+14                               & 60                             & 38                              & 259                            & 85                              & 695                            \\
+16                               & 75                             & 42                              & 314                            & 90                              & 769                            \\
+18                               & 90                             & 46                              & 317                            & 95                              & 812                            \\
+                                 &                                &                                 &                                & 100                             & 918                            \\ \hline
+\end{tabular}
+\caption{Data quicksort}
+\label{quick}
+\end{table}
 
 \end{document}
