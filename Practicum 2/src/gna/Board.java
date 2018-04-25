@@ -10,14 +10,27 @@ public class Board
 	// construct a board from an N-by-N array of tiles
 	public Board( int[][] tiles )
 	{
-		// TODO (make a deep copy of tiles and store it into this.tiles)
-		throw new RuntimeException("not implemented");
+		int[][] copy = new int[tiles[0].length][tiles[1].length];
+		for (int i = 0; i < tiles[0].length; i++){
+			for (int j = 0; j < tiles[1].length; j++)
+				copy[i][j] = tiles[i][j];
+		}
+		this.tiles = copy;
 	}
 	
 	// return number of blocks out of place
 	public int hamming()
 	{
-		throw new RuntimeException("not implemented"); // TODO
+		int expected = 1;
+		int result = 0;
+		//TODO check of i en j loops moeten omgewisseld
+		for (int i = 0; i < this.tiles.length; i++){
+			for (int j = 0; j < this.tiles[i].length; j++) {
+				if (tiles[i][j] == expected) result++;
+				expected++;
+			}
+		}
+		return result;
 	}
 	
 	// return sum of Manhattan distances between blocks and goal
@@ -57,14 +70,87 @@ public class Board
 	// return a string representation of the board
 	public String toString()
 	{
-		return "<empty>"; // TODO
+		String b = new String();
+		for(int i=0; i<tiles.length; i++) {
+			String a = new String();
+			for(int j=0; j<tiles[i].length; j++) {
+				a += tiles[i][j];
+			}
+			b += a + '\n';
+		}
+		return b;
 	}
 
 	// is the initial board solvable? Note that the empty tile must
 	// first be moved to its correct position.
 	public boolean isSolvable()
 	{
-		throw new RuntimeException("not implemented"); // TODO
+		Board temp = new Board(this.tiles);
+
+		//locate empty space and move to correct position
+		int[] location = temp.emptySpaceLocation();
+
+		//correct location in NxN board == [N-1][N-1]
+		//move empty space to correct i position
+		for (int i = location[0]; i < temp.tiles[0].length-1; i++){
+			//TODO check of return noodzakelijk is
+			temp = move(temp, location, new int[] {location[0], location[1] + 1});
+			location[1] += 1;
+		}
+
+		//move empty space to correct j position
+		for (int j = location[1]; j < temp.tiles[1].length-1; j++){
+			//TODO check of return noodzakelijk is
+			temp = move(temp, location, new int[] {location[0] + 1, location[1]});
+			location[0] +=1;
+		}
+
+		//calculate formula
+		double numerator;
+		double denominator;
+		double result = 1;
+		double elements = Math.pow(this.tiles[0].length,2) - 1;
+		for (int j = 1; j <= elements; j++){
+			for (int i = 1; i < j; i++){
+				numerator = p(temp, j) - p(temp, i);
+				denominator = j - i;
+				result = result * numerator/denominator;
+			}
+		}
+
+		//result must be smaller or equal to 0
+		return (result <= 0);
+	}
+
+	private Board move(Board board, int[] location1, int[] location2){
+		Board newBoard = new Board(board.tiles);
+		newBoard.tiles[location1[0]][location1[1]] = board.tiles[location2[0]][location2[1]];
+		newBoard.tiles[location2[0]][location2[1]] = board.tiles[location1[0]][location1[1]];
+
+		return newBoard;
+	}
+
+	private int p (Board board, int value) throws IllegalArgumentException{
+		for (int i = 0; i < board.tiles[0].length; i++){
+			for (int j = 0; j < board.tiles[0].length; j++){
+				if (board.tiles[i][j] == value) return i * board.tiles[0].length + j +1;
+			}
+		}
+		throw new IllegalArgumentException("Given value was not found");
+	}
+
+	private int[] emptySpaceLocation(){
+		int locationI = 0;
+		int locationJ = 0;
+		for (int i = 0; i < this.tiles[0].length; i++){
+			for (int j = 0; j < this.tiles[1].length; j++){
+				if (tiles[i][j] == 0){
+					locationI = i;
+					locationJ = j;
+				}
+			}
+		}
+		return new int[] {locationI, locationJ};
 	}
 }
 
