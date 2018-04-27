@@ -2,14 +2,18 @@ package gna;
 
 import java.util.Collection;
 import java.util.Arrays;
+import java.util.HashSet;
 
 public class Board
 {
 	private int[][] tiles;
 
+	public int[][] getTiles(){
+		return this.tiles;
+	}
+
 	// construct a board from an N-by-N array of tiles
-	public Board( int[][] tiles )
-	{
+	public Board( int[][] tiles ) {
 		int[][] copy = new int[tiles[0].length][tiles[1].length];
 		for (int i = 0; i < tiles[0].length; i++){
 			for (int j = 0; j < tiles[1].length; j++)
@@ -19,14 +23,13 @@ public class Board
 	}
 	
 	// return number of blocks out of place
-	public int hamming()
-	{
+	public int hamming() {
 		int expected = 1;
 		int result = 0;
 		//TODO check of i en j loops moeten omgewisseld
 		for (int i = 0; i < this.tiles.length; i++){
 			for (int j = 0; j < this.tiles[i].length; j++) {
-				if (tiles[i][j] == expected) result++;
+				if (tiles[i][j] != expected && tiles[i][j] != 0) result++;
 				expected++;
 			}
 		}
@@ -34,16 +37,30 @@ public class Board
 	}
 	
 	// return sum of Manhattan distances between blocks and goal
-	public int manhattan()
-	{
-		throw new RuntimeException("not implemented"); // TODO
+	public int manhattan() {
+		int count = 0;
+		int expected = 1;
+		for (int i = 0; i<tiles[0].length; i++)
+			for (int j=0; j<tiles[0].length; j++){
+				if(tiles[i][j] != expected && tiles[i][j] != 0)
+				{
+						//expi expj geven de verwacht i en j voor het cijfer dat er staat
+						int expi = Math.floorDiv(tiles[i][j] -1, tiles[0].length );
+						int expj = Math.floorMod(tiles[i][j] -1, tiles[0].length );
+						int dist = Math.abs(expi - i) + Math.abs(expj - j);
+						count = count + dist;
+				}
+				expected++;
+			}
+		return count;
+
+
 	}
 	
 	// Does this board equal y. Two boards are equal when they both were constructed
 	// using tiles[][] arrays that contained the same values.
 	@Override
-	public boolean equals(Object y)
-	{
+	public boolean equals(Object y)	{
 		if ( !(y instanceof Board) )
 			return false;
 
@@ -56,20 +73,27 @@ public class Board
 	// - http://stackoverflow.com/questions/27581/what-issues-should-be-considered-when-overriding-equals-and-hashcode-in-java/27609#27609
 	// - http://www.ibm.com/developerworks/library/j-jtp05273/
     @Override
-    public int hashCode()
-	{
+    public int hashCode() {
 		return Arrays.deepHashCode(tiles);
 	}
 	
 	// return a Collection of all neighboring board positions
-	public Collection<Board> neighbors()
-	{
-		throw new RuntimeException("not implemented"); // TODO
+	public Collection<Board> neighbors() {
+		Collection<Board> neighbors = new HashSet<Board>();
+
+		int[] location = this.emptySpaceLocation();
+		// 4 possible neighbors: empty location to above, below, left or right
+
+		if(0 < location[0]) neighbors.add(move(this, new int[]{location[0], location[1]}, new int[]{location[0] - 1, location[1]}));
+		if(0 < location[1]) neighbors.add(move(this, new int[]{location[0], location[1]}, new int[]{location[0], location[1] - 1}));
+
+		if(location[0]< tiles[0].length -1) neighbors.add(move(this, new int[]{location[0], location[1]}, new int[]{location[0] + 1, location[1]}));
+		if(location[1]< tiles[0].length -1) neighbors.add(move(this, new int[]{location[0], location[1]}, new int[]{location[0], location[1] + 1}));
+		return neighbors;
 	}
 	
 	// return a string representation of the board
-	public String toString()
-	{
+	public String toString() {
 		String b = new String();
 		for(int i=0; i<tiles.length; i++) {
 			String a = new String();
@@ -83,8 +107,7 @@ public class Board
 
 	// is the initial board solvable? Note that the empty tile must
 	// first be moved to its correct position.
-	public boolean isSolvable()
-	{
+	public boolean isSolvable() {
 		Board temp = new Board(this.tiles);
 
 		//locate empty space and move to correct position
