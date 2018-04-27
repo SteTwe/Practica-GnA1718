@@ -115,14 +115,14 @@ public class Board
 
 		//correct location in NxN board == [N-1][N-1]
 		//move empty space to correct i position
-		for (int i = location[0]; i < temp.tiles[0].length-1; i++){
+		for (int i = location[1]; i < temp.tiles[0].length-1; i++){
 			//TODO check of return noodzakelijk is
 			temp = move(temp, location, new int[] {location[0], location[1] + 1});
 			location[1] += 1;
 		}
 
 		//move empty space to correct j position
-		for (int j = location[1]; j < temp.tiles[1].length-1; j++){
+		for (int j = location[0]; j < temp.tiles[1].length-1; j++){
 			//TODO check of return noodzakelijk is
 			temp = move(temp, location, new int[] {location[0] + 1, location[1]});
 			location[0] +=1;

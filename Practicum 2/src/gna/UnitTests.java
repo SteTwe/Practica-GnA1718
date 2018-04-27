@@ -13,9 +13,12 @@ import org.junit.Test;
  * Feel free to modify these to automatically test puzzles or other functionality
  */
 public class UnitTests {
-  
+
+  int[][] tiles1 = new int[][]{{7,5,3},{4,2,6},{1,8,0}};
+
   @Test
   public void test() {
-		
+    Board board = new Board(tiles1);
+    System.out.println(board.toString());
   }
 }
