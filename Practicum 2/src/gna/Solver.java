@@ -172,7 +172,7 @@ public class Solver{
 		PriorityQueue<BoardState> Qbs1 = new PriorityQueue<BoardState>(Q);
 		BoardState bs=null;
 
-		System.out.println("********************PriotiryQ*****************************");
+		System.out.println("********************Priority Queue*****************************");
 		while (!Qbs1.isEmpty()){
 			bs = Qbs1.remove();
 			Board b = new Board(bs.board.getTiles());

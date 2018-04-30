@@ -99,6 +99,8 @@ public class Board
 			String a = new String();
 			for(int j=0; j<tiles[i].length; j++) {
 				a += tiles[i][j];
+				a += " ";
+				if (tiles[i][j] < 10) a += " "; 
 			}
 			b += a + '\n';
 		}
