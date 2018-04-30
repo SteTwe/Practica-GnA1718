@@ -48,7 +48,10 @@
 \end{titlepage}
 
 \section*{Inleiding}
+%TODO
 
+
+\newpage
 \section*{Overzicht}
 \begin{table}[ht]
 \centering
@@ -73,6 +76,8 @@ De Hamming prioriteitsfunctie kijkt naar het aantal elementen die op de foute pl
 \includegraphics[width=\textwidth]{hamming}\\
 In mijn implementatie van de Hamming functie gebruik ik twee for-lussen die beide van 0 tot N lopen. Bij elke iteratie zijn er maximaal twee array accesses nodig. In dit worst-case geval is de tijdscomplexiteit $\sim 2N^2$.\\
 In het beste geval (de puzzel is al opgelost) wordt de 2\textsuperscript{e} array access slechts 1 keer uitgevoerd, bij het 0-vakje (dit kan nooit gelijk zijn aan de variabele \emph{expected}). Bij de gewone vakjes is de if-clausule al gefalsifi\"eerd door de 1\textsuperscript{e} array access en wordt de 2\textsuperscript{e} dus niet uitgevoerd. De best-case tijdscomplexiteit is dus $\sim N^2 + 1$.
+%TODO average case
+
 \section*{Tijdscomplexiteit Manhattan}
 De Manhattan prioriteitsfunctie kijkt naar de totale afstand tussen de elementen en hun juiste locatie. We lopen over de hele puzzel en vergelijken de waarde op een bepaalde positie i,j met de verwachte waarde. Als deze 2 waarden niet overeenkomen berekenen we de afstand tot de juiste positie en verhogen we het resultaat met deze afstand.\vspace*{10px}
 \includegraphics[width=\textwidth]{manhattan}\\
@@ -94,9 +99,37 @@ In mijn implementatie gebruik ik 1 hulpfunctie \emph{move} om de blokjes te vers
 Elk bord met grootte $N \times N$ heeft maximaal $N^2$! permutaties/verschillende bordconfiguraties. Niet alle permutaties zijn bereikbaar vanuit de initi\"ele configuratie, slechts de helft kan bereikt worden met legale verschuivingen. Het maximaal aantal bordconfiguraties in het geheugen is dus gelijk aan $\frac{N^2!}{2}$. De keuze van prioriteitsfunctie zou dit eventueel nog kunnen verlagen.
 	
 \section*{Worst-case tijdscomplexiteit}
+De built-in priorityqueue van Java die ik gebruikt heb, heeft een complexiteit van $O(log(N))$ om een element aan de rij toe te voegen. In de vorige vraag hebben we vastgesteld dat er maximaal $\frac{N^2!}{2}$ bordconfiguraties in het geheugen zitten. Dit impliceert dat het volgende toe te voegen bord moet worden vergeleken met $log(\frac{N^2!}{2})$ borden. De gekozen prioriteitsfunctie (Hamming of Manhattan) bepaalt mee de complexiteit van de vergelijking. De worst-case complexiteit is dan:
+\\
+	\begin{align}
+	\centering
+		&log(\frac{N^2!}{2}) * 1.5N^2 * 2 \\
+	=   & 3log(\frac{N^2!}{2})*N^{2} \\
+	=	& 3N^2*(log(N^2!)-log(2)) \\
+	=   & 3N^2*(log(N^2!)-1) \\
+	=   & 3N^2*log(N^2!) - 3N^2
+	\end{align}
+	Met behulp van Stirling's benadering $log_2(n!) \approx nlog_2(n) - log_2(e)n + O(log_2(n))$ bekomen we:
+	\begin{align}
+	\centering
+		& 3N^2*log(N^2!) \\
+	=\sim	& 3N^2*N^2log(N^2)\\
+	=\sim	& 6N^4log(N)
+	\end{align}
+	\\
+Het verwijderen van een element met de laagste priority uit de priorityqueue gebeurt in constante tijd, het staat immers vooraan in de queue. Elk ander element gebeurt in lineaire tijd. 
 \section*{Betere prioriteitsfuncties}
+
+	
+\newpage
 \section*{Tijd, geheugen of algoritme?}
+Een betere prioriteitsfunctie heeft naar mijn mening het meeste invloed. Dit kunnen we bijvoorbeeld zien bij de experimenten in vraag 1: met de Hamming functie zijn 6 van de 8 borden niet oplosbaar binnen de 5 minuten, terwijl de Manhattan functie een maximale tijd van 14.2 seconden heeft. Dit toont de invloed van een goed algoritme op de effici\"entie.\\
+Dat meer tijd niet de beste manier is kunnen we op dezelfde manier aantonen: de langste tijd met Manhattan is 14.2 seconden, hetzelfde bord met Hamming is meer dan 5 minuten. 10 keer zo veel tijd heeft dus amper invloed op een probleem met deze complexiteit.\\
+Meer geheugen is ook niet de oplossing, aangezien een betere prioriteitsfunctie impliceert dat er minder borden in de priorityqueue zitten en dus ook minder geheugen nodig heeft.
+	
 \section*{Effici\"ent algoritme}
+%TODO
+	
 
 
 \end{document}
