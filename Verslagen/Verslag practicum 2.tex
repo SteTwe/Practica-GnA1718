@@ -14,7 +14,7 @@
 \usepackage{caption}
 \usepackage[backend=biber, style=numeric, citestyle=numeric-comp, sorting = none]{biblatex}
 \author{Stef Tweepenninckx, r0677232}
-\title{Practicum 1: Sorteeralgoritmes}
+\title{Practicum 2: 8-puzzel}
 
 
 %define printtitle
@@ -71,12 +71,16 @@ puzzle42.txt & 42                    & \textgreater 5 min & 8.528         \\ \hl
 \captionsetup{justification=centering,margin=2cm}
 \caption{Resultaten experiment met Hamming en Manhattan prioriteitsfunctie}
 \end{table}
+
 \section*{Tijdscomplexiteit Hamming}
-De Hamming prioriteitsfunctie kijkt naar het aantal elementen die op de foute plaats staat. We lopen over de hele puzzel en vergelijken de waarde op een bepaalde positie i,j met de verwachte waarde. Als deze 2 waarden niet overeenkomen verhogen we het resultaat.\\
+De Hamming prioriteitsfunctie kijkt naar het aantal elementen die op de foute plaats staat. We lopen over de hele puzzel en vergelijken de waarde op een bepaalde positie i,j met de verwachte waarde. Als deze 2 waarden niet overeenkomen verhogen we het resultaat.
+\vspace*{10px}
 \includegraphics[width=\textwidth]{hamming}\\
+\captionof{figure}{Implementatie van Hamming prioriteitsfunctie}
+\vspace*{10px}
 In mijn implementatie van de Hamming functie gebruik ik twee for-lussen die beide van 0 tot N lopen. Bij elke iteratie zijn er maximaal twee array accesses nodig. In dit worst-case geval is de tijdscomplexiteit $\sim 2N^2$.\\
-In het beste geval (de puzzel is al opgelost) wordt de 2\textsuperscript{e} array access slechts 1 keer uitgevoerd, bij het 0-vakje (dit kan nooit gelijk zijn aan de variabele \emph{expected}). Bij de gewone vakjes is de if-clausule al gefalsifi\"eerd door de 1\textsuperscript{e} array access en wordt de 2\textsuperscript{e} dus niet uitgevoerd. De best-case tijdscomplexiteit is dus $\sim N^2 + 1$.
-%TODO average case
+In het beste geval (de puzzel is al opgelost) wordt de 2\textsuperscript{e} array access slechts 1 keer uitgevoerd, bij het 0-vakje (dit kan nooit gelijk zijn aan de variabele \emph{expected}). Bij de gewone vakjes is de if-clausule al gefalsifi\"eerd door de 1\textsuperscript{e} array access en wordt de 2\textsuperscript{e} dus niet uitgevoerd. De best-case tijdscomplexiteit is dus $\sim N^2 + 1$.\\
+In een average-case geval ($\pm$ helft van de blokjes staan juist) is de complexiteit $\sim 1,5*N^{2}$.
 
 \section*{Tijdscomplexiteit Manhattan}
 De Manhattan prioriteitsfunctie kijkt naar de totale afstand tussen de elementen en hun juiste locatie. We lopen over de hele puzzel en vergelijken de waarde op een bepaalde positie i,j met de verwachte waarde. Als deze 2 waarden niet overeenkomen berekenen we de afstand tot de juiste positie en verhogen we het resultaat met deze afstand.\vspace*{10px}
@@ -90,11 +94,15 @@ In het beste geval worden de binnenste array accesses nooit uitgevoerd en worden
 \section*{isSolvable}
 In het eerste deel van isSolvable() localiseer ik het lege 0-vakje en verplaats het naar de juiste i locatie en de juiste j locatie: $i=N-1$, $j=N-1$.\\
 In het tweede deel bereken ik de formule zelf met behulp van twee for-loops. Bij elke iteratie bereken ik de teller en noemer en vermenigvuldig het deeltal met het voorgaande resultaat. Op deze manier kan je de productfunctie berekenen. Op het einde return je of het resultaat groter of gelijk is dan 0 en het bord dus al dan niet oplosbaar is.\\
+\vspace*{10px}
 \includegraphics[width=\textwidth]{isSolvable}\\
+\captionof{figure}{Implementatie van iSolvable()}
+\vspace*{10px}
 %TODO tijdscomplexiteit isSolvable
 
 In mijn implementatie gebruik ik 1 hulpfunctie \emph{move} om de blokjes te verschuiven. In het gemiddelde geval (0-vakje staat in het midden) wordt deze methode N keer uitgevoerd met 2 array accesses, dus een gemiddelde tijdscomplexiteit van $\sim 2N$.
 
+\newpage
 \section*{Borden in geheugen}
 Elk bord met grootte $N \times N$ heeft maximaal $N^2$! permutaties/verschillende bordconfiguraties. Niet alle permutaties zijn bereikbaar vanuit de initi\"ele configuratie, slechts de helft kan bereikt worden met legale verschuivingen. Het maximaal aantal bordconfiguraties in het geheugen is dus gelijk aan $\frac{N^2!}{2}$. De keuze van prioriteitsfunctie zou dit eventueel nog kunnen verlagen.
 	
@@ -118,17 +126,18 @@ De built-in priorityqueue van Java die ik gebruikt heb, heeft een complexiteit v
 	\end{align}
 	\\
 Het verwijderen van een element met de laagste priority uit de priorityqueue gebeurt in constante tijd, het staat immers vooraan in de queue. Elk ander element gebeurt in lineaire tijd. 
-\section*{Betere prioriteitsfuncties}
-
-	
 \newpage
+\section*{Betere prioriteitsfuncties}
+%TODO
+	
+
 \section*{Tijd, geheugen of algoritme?}
 Een betere prioriteitsfunctie heeft naar mijn mening het meeste invloed. Dit kunnen we bijvoorbeeld zien bij de experimenten in vraag 1: met de Hamming functie zijn 6 van de 8 borden niet oplosbaar binnen de 5 minuten, terwijl de Manhattan functie een maximale tijd van 14.2 seconden heeft. Dit toont de invloed van een goed algoritme op de effici\"entie.\\
 Dat meer tijd niet de beste manier is kunnen we op dezelfde manier aantonen: de langste tijd met Manhattan is 14.2 seconden, hetzelfde bord met Hamming is meer dan 5 minuten. 10 keer zo veel tijd heeft dus amper invloed op een probleem met deze complexiteit.\\
 Meer geheugen is ook niet de oplossing, aangezien een betere prioriteitsfunctie impliceert dat er minder borden in de priorityqueue zitten en dus ook minder geheugen nodig heeft.
 	
 \section*{Effici\"ent algoritme}
-%TODO
+In 1986 is aangetoond dat het vinden van de oplossing van een $N \times N$ puzzel NP-compleet is. \cite{referentie} Dit wilt zeggen dat het probleem Niet-Deterministisch Polynomiaal herkenbaar is en dus niet gevonden kan worden binnen polynomiale tijd.
 	
 
 
