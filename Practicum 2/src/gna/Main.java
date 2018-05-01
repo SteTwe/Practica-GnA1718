@@ -21,12 +21,15 @@ class Main
 		}
 		else
 		{
-			Solver solver = new Solver(initial, PriorityFunc.HAMMING);
-	
+			long start = System.currentTimeMillis();
+			Solver solver = new Solver(initial, PriorityFunc.MANHATTAN);
+			long end = System.currentTimeMillis();
+			long elapsed = (end-start);
+			System.out.println("Seconden: " + elapsed);
 			for (Board board : solver.solution())
 				System.out.println(board);
 
-			System.out.println("Minimum number of moves = " + Integer.toString(solver.solution().size() - 1));
+		System.out.println("Minimum number of moves = " + Integer.toString(solver.solution().size() - 1));
 		}
 	}
 }

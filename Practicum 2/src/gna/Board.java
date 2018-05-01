@@ -1,12 +1,13 @@
 package gna;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Arrays;
-import java.util.HashSet;
 
 public class Board
 {
 	private int[][] tiles;
+	private final int N;
 
 	public int[][] getTiles(){
 		return this.tiles;
@@ -20,13 +21,13 @@ public class Board
 				copy[i][j] = tiles[i][j];
 		}
 		this.tiles = copy;
+		this.N = tiles.length;
 	}
 	
 	// return number of blocks out of place
 	public int hamming() {
 		int expected = 1;
 		int result = 0;
-		//TODO check of i en j loops moeten omgewisseld
 		for (int i = 0; i < this.tiles.length; i++){
 			for (int j = 0; j < this.tiles[i].length; j++) {
 				if (tiles[i][j] != expected && tiles[i][j] != 0) result++;
@@ -44,19 +45,17 @@ public class Board
 			for (int j=0; j<tiles[0].length; j++){
 				if(tiles[i][j] != expected && tiles[i][j] != 0)
 				{
-						//expi expj geven de verwacht i en j voor het cijfer dat er staat
-						int expi = Math.floorDiv(tiles[i][j] -1, tiles[0].length );
-						int expj = Math.floorMod(tiles[i][j] -1, tiles[0].length );
-						int dist = Math.abs(expi - i) + Math.abs(expj - j);
-						count = count + dist;
+					int expi = Math.floorDiv(tiles[i][j] -1, tiles[0].length );
+					int expj = Math.floorMod(tiles[i][j] -1, tiles[0].length );
+					int dist = Math.abs(expi - i) + Math.abs(expj - j);
+					count = count + dist;
 				}
 				expected++;
 			}
 		return count;
-
-
 	}
-	
+
+
 	// Does this board equal y. Two boards are equal when they both were constructed
 	// using tiles[][] arrays that contained the same values.
 	@Override
@@ -79,28 +78,69 @@ public class Board
 	
 	// return a Collection of all neighboring board positions
 	public Collection<Board> neighbors() {
-		Collection<Board> neighbors = new HashSet<Board>();
-
-		int[] location = this.emptySpaceLocation();
-		// 4 possible neighbors: empty location to above, below, left or right
-
-		if(0 < location[0]) neighbors.add(move(this, new int[]{location[0], location[1]}, new int[]{location[0] - 1, location[1]}));
-		if(0 < location[1]) neighbors.add(move(this, new int[]{location[0], location[1]}, new int[]{location[0], location[1] - 1}));
-
-		if(location[0]< tiles[0].length -1) neighbors.add(move(this, new int[]{location[0], location[1]}, new int[]{location[0] + 1, location[1]}));
-		if(location[1]< tiles[0].length -1) neighbors.add(move(this, new int[]{location[0], location[1]}, new int[]{location[0], location[1] + 1}));
+		String[] directions = new String[] { "left", "right", "up", "down" };
+		ArrayList<Board> neighbors = new ArrayList<Board>();
+		for (String direction : directions) {
+			try {
+				neighbors.add(new Board(moveZero(tiles, direction)));
+			} catch (IndexOutOfBoundsException e) {
+			}
+		}
 		return neighbors;
 	}
-	
+
+	public boolean isSolution(){
+		int value = 1;
+		for (int i = 0; i < N; i++){
+			for (int j = 0; j < N; j++){
+				if (value != N*N && tiles[i][j] != value++)
+					return false;
+			}
+		}
+		return true;
+	}
+
+	private int[][] moveZero(int[][] tiles, String orientation) throws IllegalArgumentException {
+		int[][] nTiles = deepCopy(tiles);
+		int[] emptySpaceLocation = emptySpaceLocation();
+		orientation = orientation.toLowerCase();
+		if (orientation == "left") {
+			nTiles[emptySpaceLocation[0]][emptySpaceLocation[1]] = nTiles[emptySpaceLocation[0]][emptySpaceLocation[1] - 1];
+			nTiles[emptySpaceLocation[0]][emptySpaceLocation[1] - 1] = 0;
+		} else if (orientation == "right") {
+			nTiles[emptySpaceLocation[0]][emptySpaceLocation[1]] = nTiles[emptySpaceLocation[0]][emptySpaceLocation[1] + 1];
+			nTiles[emptySpaceLocation[0]][emptySpaceLocation[1] + 1] = 0;
+		} else if (orientation == "up") {
+			nTiles[emptySpaceLocation[0]][emptySpaceLocation[1]] = nTiles[emptySpaceLocation[0] - 1][emptySpaceLocation[1]];
+			nTiles[emptySpaceLocation[0] - 1][emptySpaceLocation[1]] = 0;
+		} else if (orientation == "down") {
+			nTiles[emptySpaceLocation[0]][emptySpaceLocation[1]] = nTiles[emptySpaceLocation[0] + 1][emptySpaceLocation[1]];
+			nTiles[emptySpaceLocation[0] + 1][emptySpaceLocation[1]] = 0;
+		} else {
+			throw new IllegalArgumentException("");
+		}
+		return nTiles;
+	}
+
+	private static int[][] deepCopy(int[][] a) {
+		int[][] b = new int[a.length][a[0].length];
+		for (int row = 0; row < a.length; row++) {
+			for (int column = 0; column < a[row].length; column++) {
+				b[row][column] = a[row][column];
+			}
+		}
+		return b;
+	}
 	// return a string representation of the board
 	public String toString() {
 		String b = new String();
 		for(int i=0; i<tiles.length; i++) {
 			String a = new String();
 			for(int j=0; j<tiles[i].length; j++) {
+				if (tiles[i][j] < 10) a += " ";
 				a += tiles[i][j];
 				a += " ";
-				if (tiles[i][j] < 10) a += " "; 
+//				if (tiles[i][j] < 10) a += " ";
 			}
 			b += a + '\n';
 		}
@@ -118,14 +158,12 @@ public class Board
 		//correct location in NxN board == [N-1][N-1]
 		//move empty space to correct i position
 		for (int i = location[1]; i < temp.tiles[0].length-1; i++){
-			//TODO check of return noodzakelijk is
 			temp = move(temp, location, new int[] {location[0], location[1] + 1});
 			location[1] += 1;
 		}
 
 		//move empty space to correct j position
 		for (int j = location[0]; j < temp.tiles[1].length-1; j++){
-			//TODO check of return noodzakelijk is
 			temp = move(temp, location, new int[] {location[0] + 1, location[1]});
 			location[0] +=1;
 		}
@@ -142,9 +180,8 @@ public class Board
 				result = result * numerator/denominator;
 			}
 		}
-
 		//result must be smaller or equal to 0
-		return (result <= 0);
+		return (result >= 0);
 	}
 
 	private Board move(Board board, int[] location1, int[] location2){
