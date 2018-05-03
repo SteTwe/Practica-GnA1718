@@ -12,9 +12,11 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{caption}
-\usepackage[backend=biber, style=numeric, citestyle=numeric-comp, sorting = none]{biblatex}
+%\usepackage[backend=biber, style=numeric, citestyle=numeric-comp, sorting = none]{biblatex}
+\usepackage[backend=bibtex, style=numeric, citestyle=numeric-comp]{biblatex}
 \author{Stef Tweepenninckx, r0677232}
 \title{Practicum 2: 8-puzzel}
+\addbibresource{refPrac2.bib}
 
 
 %define printtitle
@@ -48,8 +50,8 @@
 \end{titlepage}
 
 \section*{Inleiding}
-%TODO
-
+De 8-puzzel is een schuifpuzzel die gespeeld wordt op een rooster van 3x3. De vakjes zijn genummerd van 1 t.e.m. 8 en er is 1 leeg vakje. De bedoeling van het spel is om door enkel te schuiven alle vakjes in de juiste volgorde te krijgen.\\
+In dit practicum, gemaakt voor het vak \emph{Gegevensstructuren en algoritmen} implementeer ik een solver die deze puzzel oplost en beantwoord ik een aantal vragen over mijn implementatie en de complexiteit ervan.
 
 \newpage
 \section*{Overzicht}
@@ -137,8 +139,8 @@ Dat meer tijd niet de beste manier is kunnen we op dezelfde manier aantonen: de 
 Meer geheugen is ook niet de oplossing, aangezien een betere prioriteitsfunctie impliceert dat er minder borden in de priorityqueue zitten en dus ook minder geheugen nodig heeft.
 	
 \section*{Effici\"ent algoritme}
-In 1986 is aangetoond dat het vinden van de oplossing van een $N \times N$ puzzel NP-compleet is. \cite{referentie} Dit wilt zeggen dat het probleem Niet-Deterministisch Polynomiaal herkenbaar is en dus niet gevonden kan worden binnen polynomiale tijd.
-	
+In 1986 is aangetoond dat het vinden van de oplossing van een $N \times N$ puzzel NP-compleet is. \cite{ratnerwarmuth1986} Dit wilt zeggen dat het probleem Niet-Deterministisch Polynomiaal herkenbaar is en dus niet gevonden kan worden binnen polynomiale tijd.
 
+\printbibliography
 
 \end{document}
