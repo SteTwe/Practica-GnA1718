@@ -88,3 +88,8 @@ fabric.properties
 #### FOLDERS & FILES
 
 copy2/
+
+#### bibtex shit
+*.blg
+*.bbl
+*blx.bib
