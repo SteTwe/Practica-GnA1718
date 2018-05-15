@@ -1,6 +1,10 @@
 package gna;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
+
 import libpract.*;
 
 /**
@@ -8,6 +12,41 @@ import libpract.*;
  */
 public class Stitcher
 {
+
+	private Comparator<Position> comparator= new Comparator<Position>(){
+		@Override
+		public int compare(Position pos1, Position pos2){
+			if (distance[pos1.getX()][pos1.getY()] < distance[pos2.getX()][pos2.getY()])
+				return -1;
+			else if (distance[pos1.getX()][pos1.getY()] > distance[pos2.getX()][pos2.getY()])
+				return 1;
+			return 0;
+		}
+	};
+	private PriorityQueue<Position> prioQ = new PriorityQueue<Position>(comparator);
+	private double distance[][];
+	private int dimensionX,dimensionY;
+	private Position[][] previous;
+
+	public void setDimensions(int x, int y) {
+		this.dimensionX = x;
+		this.dimensionY = y;
+		}
+
+	/**
+	 * Prepare for dijkstra algorithm: set node distance to infinity
+	 */
+	private void dijkstraPrepare(){
+		distance = new double[dimensionX][dimensionY];
+		previous = new Position[dimensionX][dimensionY];
+		for (int i =0; i < dimensionX; i++){
+			for (int j = 0; j < dimensionY; j++){
+				distance[i][j] = Double.POSITIVE_INFINITY;
+			}
+		}
+		distance[0][0] = 0;
+	}
+
 	/**
 	 * Return the sequence of positions on the seam. The first position in the
 	 * sequence is (0, 0) and the last is (width - 1, height - 1). Each position
@@ -36,7 +75,56 @@ public class Stitcher
 	 *   the illustration above.
 	 */
 	public List<Position> seam(int[][] image1, int[][] image2) {
-		throw new RuntimeException("not implemented yet");
+		setDimensions(image1.length, image1[0].length);
+		 Position wanted = new Position(dimensionX - 1, dimensionY - 1);
+		 prioQ.clear();
+		 dijkstraPrepare();
+		 prioQ.add(new Position(0,0));
+		 while (!prioQ.isEmpty()){
+		 	Position pos = prioQ.poll();
+		 	if (pos == wanted) break;
+		 	for (Position pos2 : neighbors(pos)){
+		 		try {
+		 			double c = distance[pos.getX()][pos.getY()] + ImageCompositor.pixelSqDistance(image1[pos2.getX()][pos2.getY()], image2[pos2.getX()][pos2.getY()]);
+					if (c < distance[pos2.getX()][pos2.getY()]){
+						distance[pos2.getX()][pos2.getY()] = c;
+						previous[pos2.getX()][pos2.getY()] = pos;
+						if (prioQ.contains(pos2)){
+							prioQ.remove(pos2);
+						}
+						prioQ.add(pos2);
+					}
+				}
+				catch (ArrayIndexOutOfBoundsException except){
+		 			continue;
+				}
+			}
+		 }
+		 return dijkstra(wanted);
+	}
+
+	private List<Position> neighbors(Position p){
+		List<Position> neighbors = new ArrayList<Position>();
+		neighbors.add(new Position(p.getX() + 1,p.getY()));
+		neighbors.add(new Position(p.getX() - 1,p.getY()));
+		neighbors.add(new Position(p.getX(),p.getY() + 1));
+		neighbors.add(new Position(p.getX(),p.getY() - 1));
+		neighbors.add(new Position(p.getX() + 1,p.getY() + 1));
+		neighbors.add(new Position(p.getX() + 1,p.getY() - 1));
+		neighbors.add(new Position(p.getX() - 1,p.getY() + 1));
+		neighbors.add(new Position(p.getX() - 1,p.getY() - 1));
+		return neighbors;
+	}
+
+	public List<Position> dijkstra(Position target){
+		ArrayList<Position> solution = new ArrayList<Position>();
+		Position pos = new Position(target.getX(),target.getY());
+		solution.add(0,pos);
+		while (previous[pos.getX()][pos.getY()] != null){
+			solution.add(0, previous[pos.getX()][pos.getY()]);
+			pos = previous[pos.getX()][pos.getY()];
+		}
+		return solution;
 	}
 
 	/**
@@ -52,6 +140,8 @@ public class Stitcher
 	public void floodfill(Stitch[][] mask) {
 		throw new RuntimeException("not implemented yet");
 	}
+
+
 
 	/**
 	 * Return the mask to stitch two images together. The seam runs from the upper
