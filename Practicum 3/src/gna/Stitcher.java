@@ -136,44 +136,38 @@ public class Stitcher
 	 * to check whether your implementation does this properly.
 	 */
 	public void floodfill(Stitch[][] mask) {
+		flood(mask, new Position(mask.length - 1, 0), Stitch.IMAGE1);
+		flood(mask, new Position(0, mask[0].length - 1), Stitch.IMAGE2);
+		}
+
+	private void flood(Stitch[][] mask, Position pos, Stitch image){
 		Stack<Position> stack = new Stack<Position>();
-		Position startPos = getStart(mask, true, 0, mask.length);
-		if (startPos == null) startPos = getStart(mask, false, mask.length - 1, mask[0].length);
-		else {
-			stack.push(startPos);
-			flood(mask, Stitch.IMAGE1, stack);
-		}
-
-		startPos = getStart(mask, false, 0, mask[0].length);
-		if (startPos == null) startPos = getStart(mask, true, mask[0].length - 1, mask.length);
-
-		else {
-			stack.push(startPos);
-			flood(mask, Stitch.IMAGE2, stack);
-		}
-
-	}
-
-	private void flood(Stitch[][] mask, Stitch fill, Stack<Position> stack){
+		Stitch checker;
+		stack.clear();
+		stack.push(new Position(pos.getX(),pos.getY()));
 		while (!stack.isEmpty()){
-			Position current = stack.pop();
-			if (mask[current.getX()][current.getY()] != Stitch.EMPTY)
+			pos = stack.pop();
+			if (mask[pos.getX()][pos.getY()] != Stitch.EMPTY)
 				continue;
-			mask[current.getX()][current.getY()] = fill;
-			for (Position neighbor: neighbors(current))
-				stack.push(neighbor);
+			mask[pos.getX()][pos.getY()] = image;
+			for (Position n: nb(pos)){
+				try {
+					checker = mask[n.getX()][n.getY()];
+					stack.push(n);
+				} catch (ArrayIndexOutOfBoundsException e){}
+			}
 		}
 	}
 
-	private Position getStart(Stitch[][] mask, boolean jStasis, int stasis, int length) {
-		for (int i = 0; i < length; i++) {
-			if ( (jStasis) && (mask[i][stasis] == Stitch.EMPTY) )
-				return new Position(i, stasis);
-			else if ( (!jStasis) && (mask[stasis][i] == Stitch.EMPTY) )
-				return new Position(stasis, i);
-		}
-		return null;
+	private List<Position> nb(Position pos){
+		List<Position> neighbors = new ArrayList<Position>();
+		neighbors.add(new Position(pos.getX() + 1,pos.getY()));
+		neighbors.add(new Position(pos.getX() - 1,pos.getY()));
+		neighbors.add(new Position(pos.getX(),pos.getY() + 1));
+		neighbors.add(new Position(pos.getX(),pos.getY() - 1));
+		return neighbors;
 	}
+
 
 
 
