@@ -1,9 +1,7 @@
 package gna;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.net.PortUnreachableException;
+import java.util.*;
 
 import libpract.*;
 
@@ -138,7 +136,43 @@ public class Stitcher
 	 * to check whether your implementation does this properly.
 	 */
 	public void floodfill(Stitch[][] mask) {
-		throw new RuntimeException("not implemented yet");
+		Stack<Position> stack = new Stack<Position>();
+		Position startPos = getStart(mask, true, 0, mask.length);
+		if (startPos == null) startPos = getStart(mask, false, mask.length - 1, mask[0].length);
+		else {
+			stack.push(startPos);
+			flood(mask, Stitch.IMAGE1, stack);
+		}
+
+		startPos = getStart(mask, false, 0, mask[0].length);
+		if (startPos == null) startPos = getStart(mask, true, mask[0].length - 1, mask.length);
+
+		else {
+			stack.push(startPos);
+			flood(mask, Stitch.IMAGE2, stack);
+		}
+
+	}
+
+	private void flood(Stitch[][] mask, Stitch fill, Stack<Position> stack){
+		while (!stack.isEmpty()){
+			Position current = stack.pop();
+			if (mask[current.getX()][current.getY()] != Stitch.EMPTY)
+				continue;
+			mask[current.getX()][current.getY()] = fill;
+			for (Position neighbor: neighbors(current))
+				stack.push(neighbor);
+		}
+	}
+
+	private Position getStart(Stitch[][] mask, boolean jStasis, int stasis, int length) {
+		for (int i = 0; i < length; i++) {
+			if ( (jStasis) && (mask[i][stasis] == Stitch.EMPTY) )
+				return new Position(i, stasis);
+			else if ( (!jStasis) && (mask[stasis][i] == Stitch.EMPTY) )
+				return new Position(stasis, i);
+		}
+		return null;
 	}
 
 
@@ -157,8 +191,17 @@ public class Stitcher
 	 * image1 and image2 are both non-null and have equal dimensions.
 	 */
 	public Stitch[][] stitch(int[][] image1, int[][] image2) {
-		// use seam and floodfill to implement this method
-		throw new RuntimeException("not implemented yet");
+		setDimensions(image1.length, image1[0].length);
+		Stitch[][] result = new Stitch[dimensionX][dimensionY];
+		for (int i = 0; i < dimensionX; i++)	// Create an empty stitch array.
+			for (int j = 0; j < dimensionY; j++)
+				result[i][j] = Stitch.EMPTY;
+
+		for (Position seamPosition: seam(image1, image2)) // Create the seam.
+			result[seamPosition.getX()][seamPosition.getY()] = Stitch.SEAM;
+
+		floodfill(result);	// Floodfill the stitch array.
+		return result;
 	}
 }
 
