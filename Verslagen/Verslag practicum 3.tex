@@ -50,6 +50,8 @@
 \end{titlepage}
 
 \section*{Inleiding}
+Het derde en laatste practicum van Gegevensstructuren en Algoritmen gaat over de implementatie van een Image Compositing Algoritme. Dit algoritme voegt twee afbeeldingen samen. In deze variant is het belangrijk dat de grens tussen de twee afbeeldingen zo min mogelijk opvalt.\\
+Om dit te verwezenlijken implementeren we \emph{seam()}, \emph{floodfill()} en \emph{stitch()}. Seam bepaalt de grens tussen de twee afbeeldingen zodat deze zo min mogelijk opvalt. Floodfill gaat op basis van de gevonden grens de afbeeldingen aan elkaar hechten. Stitch combineert \emph{seam()} en \emph{floodfill()} tot een uitvoerbare method.
 
 \newpage
 \section*{Kortste pad}
@@ -96,6 +98,9 @@ Met de oude afstandsfunctie gaan we rechtstreeks van (0,0) naar eindpositie (1,1
 
 \newpage
 \section*{Tijdscomplexiteit}
+
+
+
 \section*{Voorkomen van complexe vormen seam}
 Het voorkomen van complexe vormen van de seam kan gerealiseerd worden door middel van een kleine aanpassing. In het seam algoritme gebruik ik een methode om de buren van de huidige node te bekijken. Als we willen voorkomen dat de seam terug naar boven kan lopen, kunnen we de buren boven de huidige node gewoon uitsluiten uit deze methode. Als we willen voorkomen dat de seam terug naar links kan lopen, sluiten we de buren links van de huidig node uit.
 \section*{Langste pad ipv kortste pad}
