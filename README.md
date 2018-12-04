@@ -1,2 +1,2 @@
-# Practica-G-A
-Practica van Gegevensstructuren & Algoritmen 2017-2018
+# Practica Gegevensstructuren en Algoritmen
+Practica van Gegevensstructuren & Algoritmen 2017-2018.
